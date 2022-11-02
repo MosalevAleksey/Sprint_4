@@ -17,8 +17,7 @@ public class Test2 {
     private final String NAME;
     private final String SURNAME;
     private final String ADRESS;
-    //private final String METRO ;
-    private final String TELEPHONE;
+    йййprivate final String TELEPHONE;
     private final String TEXT;
 
     public Test2(By button, String name, String surname, String adress, String telephone, String text) {
