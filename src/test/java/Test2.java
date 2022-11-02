@@ -1,33 +1,74 @@
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 
-public class TestMakeOrderChrome {
+// Класс с автотестом
+@RunWith(Parameterized.class)
+public class Test2 {
+
     //релевантные значения для заполнения формы
-    private final String NAME = "Сергей";
-    private final String SURNAME = "Иванов";
-    private final String ADRESS = "Москва Крассная площадь";
-    private final String METRO = "Бульвар Рокоссовского";
-    private final String TELEPHONE = "89680341276";
+    private final By BUTTON;
+    private final String NAME;
+    private final String SURNAME;
+    private final String ADRESS;
+    //private final String METRO ;
+    private final String TELEPHONE;
+    private final String TEXT;
+
+    public Test2(By button, String name, String surname, String adress, String telephone, String text) {
+        this.BUTTON = button;
+        this.NAME = name;
+        this.SURNAME = surname;
+        this.ADRESS = adress;
+        this.TELEPHONE = telephone;
+        this.TEXT = text;
+    }
+
+    @Parameterized.Parameters
+    public static Object[][] checkTexst() {
+        return new Object[][]{
+
+                {HomePageElement.orderButtonMidel, "Сергей", "Иванов", "Горки дом 4", "88127569885","Заказ оформлен"},
+                {HomePageElement.orderButtonHader, "Сергей", "Иванов", "Горки дом 4", "88127569885","Заказ оформлен"},
+        };
+    }
 
     @Test
     public void Testorder() {
-        System.setProperty("webdriver.chrome.driver", "C:\\WebDriver\\bin\\chromedriver.exe");
+
+        //Драйвер FirefoxDriver без UI.
+        FirefoxOptions options = new FirefoxOptions();
+        options.addArguments("--no-sandbox", "--headless", "--disable-dev-shm-usage");
+        WebDriver driver = new FirefoxDriver(options);
+        //драйвер для браузера FirefoxDriver
+        //System.setProperty("webdriver.gecko.driver", "C:\\WebDriver\\bin\\geckodriver.exe");
+        //WebDriver driver = new FirefoxDriver();
+        //Драйвер Chrome без UI.
+        //ChromeOptions options = new ChromeOptions();
+        //options.addArguments("--no-sandbox", "--headless", "--disable-dev-shm-usage");
+        //WebDriver driver = new ChromeDriver(options);
         //драйвер для браузера Chrome
-        WebDriver driver = new ChromeDriver();
+        //System.setProperty("webdriver.chrome.driver", "C:\\WebDriver\\bin\\chromedriver.exe");
+        // WebDriver driver = new ChromeDriver();
+
+
         // переход на страницу тестового приложения
         driver.get("https://qa-scooter.praktikum-services.ru");
 
         // создай объект класса страницы для входа
-        TestMakeOrder.QaScooterPageElement objQaScooterPageElement = new TestMakeOrder.QaScooterPageElement(driver);
+        HomePageElement objQaScooterPageElement = new HomePageElement(driver);
 
 
         // вызываем метод клик кнопка заказать Hader
-        objQaScooterPageElement.clickHedarOrderButton();
+        objQaScooterPageElement.clickOrderButton(BUTTON);
         // создай объект класса заполнения заказа
-        TestMakeOrder.OrderPage objOrderPage = new TestMakeOrder.OrderPage(driver);
+        OrderPageElement objOrderPage = new OrderPageElement(driver);
         //метод ожидания поля формы
         objOrderPage.waitForLoadProfileName();
         //метод заполнения Name
@@ -58,11 +99,12 @@ public class TestMakeOrderChrome {
         objOrderPage.clickNextButton(objOrderPage.yesButton);
 
         // Проверь, что нашёлся элемент с текстом оформленного заказа
-        String text = driver.findElement(objOrderPage.orderstatus).getText();
-        System.out.println(text);
-        Assert.assertThat(text, CoreMatchers.containsString("Заказ оформлен"));
+
+        System.out.println(driver.findElement(objOrderPage.orderstatus).getText());
+        Assert.assertThat(driver.findElement(objOrderPage.orderstatus).getText(), CoreMatchers.containsString(TEXT));
 
 
         driver.quit();
     }
 }
+

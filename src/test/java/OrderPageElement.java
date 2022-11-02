@@ -1,43 +1,13 @@
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class TestMakeOrder {
-        // Класс страницы авторизации
-    static class QaScooterPageElement {
+//  Класс  Элементов и методов  страницы заказать
+public class OrderPageElement {
 
-        private WebDriver driver;
-        // Кнопка "Заказать" Hader
-        private By orderButtonHader = By.className("Button_Button__ra12g");
-        // Кнопка «Статус заказа»
-        private By statusButton = By.className("Header_Link__1TAG7");
-        // Кнопка "Заказать" midel
-        private By orderButtonMidel = By.className("Button_Middle__1CSJM");
-
-        public QaScooterPageElement(WebDriver driver) {
-            this.driver = driver;
-        }
-
-        // Метод для нажатия на кнопку заказа в Heder
-        public void clickHedarOrderButton() {
-            driver.findElement(orderButtonHader).click();
-        }
-
-        // Метод для нажатия на кнопку заказа в midl
-        public void clickMidelOrderButton() {
-            WebElement element = driver.findElement(orderButtonMidel);
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", element);
-            driver.findElement(orderButtonMidel).click();
-        }
-    }
-
-    //  Класс  редактирования страницы заказать
-    static class OrderPage {
         private WebDriver driver;
         // Поле имя
-        protected By name = By.xpath("//input[@placeholder='* Имя']");
+        By name = By.xpath("//input[@placeholder='* Имя']");
         //Поле фамилия
         By surname = By.xpath("//input[@placeholder='* Фамилия']");
         // Поле Адрес
@@ -71,7 +41,7 @@ public class TestMakeOrder {
         By orderstatus = By.xpath("//div[text()='Заказ оформлен']");
 
 
-        public OrderPage(WebDriver driver) {
+        public OrderPageElement(WebDriver driver) {
             this.driver = driver;
         }
 
@@ -107,4 +77,4 @@ public class TestMakeOrder {
         }
     }
 
-}
+
