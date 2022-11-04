@@ -1,6 +1,5 @@
 import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.openqa.selenium.By;
@@ -8,19 +7,41 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 
+
 // Класс с автотестом
 @RunWith(Parameterized.class)
-public class Test2 {
+public class TestCheckOrederStatus {
 
     //релевантные значения для заполнения формы
     private final By BUTTON;
     private final String NAME;
     private final String SURNAME;
     private final String ADRESS;
-    йййprivate final String TELEPHONE;
+    private final String TELEPHONE;
     private final String TEXT;
+    private WebDriver driver;
 
-    public Test2(By button, String name, String surname, String adress, String telephone, String text) {
+    @Before
+    public void runDrever() {
+        //Драйвер FirefoxDriver без UI.
+        FirefoxOptions options = new FirefoxOptions();
+        options.addArguments("--no-sandbox", "--headless", "--disable-dev-shm-usage");
+        driver = new FirefoxDriver(options);
+        //драйвер для браузера FirefoxDriver
+        //System.setProperty("webdriver.gecko.driver", "C:\\WebDriver\\bin\\geckodriver.exe");
+        //WebDriver driver = new FirefoxDriver();
+        //Драйвер Chrome без UI.
+        //ChromeOptions options = new ChromeOptions();
+        //options.addArguments("--no-sandbox", "--headless", "--disable-dev-shm-usage");
+        //WebDriver driver = new ChromeDriver(options);
+        //драйвер для браузера Chrome
+        //System.setProperty("webdriver.chrome.driver", "C:\\WebDriver\\bin\\chromedriver.exe");
+        // WebDriver driver = new ChromeDriver();
+        // переход на страницу тестового приложения
+        driver.get("https://qa-scooter.praktikum-services.ru");
+    }
+
+    public TestCheckOrederStatus(By button, String name, String surname, String adress, String telephone, String text) {
         this.BUTTON = button;
         this.NAME = name;
         this.SURNAME = surname;
@@ -33,32 +54,13 @@ public class Test2 {
     public static Object[][] checkTexst() {
         return new Object[][]{
 
-                {HomePageElement.orderButtonMidel, "Сергей", "Иванов", "Горки дом 4", "88127569885","Заказ оформлен"},
-                {HomePageElement.orderButtonHader, "Сергей", "Иванов", "Горки дом 4", "88127569885","Заказ оформлен"},
+                {HomePageElement.orderButtonMidel, "Сергей", "Иванов", "Горки дом 4", "88127569885", "Заказ оформлен"},
+                {HomePageElement.orderButtonHader, "Сергей", "Иванов", "Горки дом 4", "88127569885", "Заказ оформлен"},
         };
     }
 
     @Test
     public void Testorder() {
-
-        //Драйвер FirefoxDriver без UI.
-        FirefoxOptions options = new FirefoxOptions();
-        options.addArguments("--no-sandbox", "--headless", "--disable-dev-shm-usage");
-        WebDriver driver = new FirefoxDriver(options);
-        //драйвер для браузера FirefoxDriver
-        //System.setProperty("webdriver.gecko.driver", "C:\\WebDriver\\bin\\geckodriver.exe");
-        //WebDriver driver = new FirefoxDriver();
-        //Драйвер Chrome без UI.
-        //ChromeOptions options = new ChromeOptions();
-        //options.addArguments("--no-sandbox", "--headless", "--disable-dev-shm-usage");
-        //WebDriver driver = new ChromeDriver(options);
-        //драйвер для браузера Chrome
-        //System.setProperty("webdriver.chrome.driver", "C:\\WebDriver\\bin\\chromedriver.exe");
-        // WebDriver driver = new ChromeDriver();
-
-
-        // переход на страницу тестового приложения
-        driver.get("https://qa-scooter.praktikum-services.ru");
 
         // создай объект класса страницы для входа
         HomePageElement objQaScooterPageElement = new HomePageElement(driver);
@@ -98,10 +100,12 @@ public class Test2 {
         objOrderPage.clickNextButton(objOrderPage.yesButton);
 
         // Проверь, что нашёлся элемент с текстом оформленного заказа
-
-        System.out.println(driver.findElement(objOrderPage.orderstatus).getText());
+        //System.out.println(driver.findElement(objOrderPage.orderstatus).getText());
         Assert.assertThat(driver.findElement(objOrderPage.orderstatus).getText(), CoreMatchers.containsString(TEXT));
+    }
 
+    @After
+    public void teardown() {
 
         driver.quit();
     }
